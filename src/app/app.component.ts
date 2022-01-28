@@ -1,3 +1,4 @@
+
 import { Component } from '@angular/core';
 @Component({
   selector: 'app-root',
@@ -9,5 +10,5 @@ export class AppComponent {
     { title: 'Inbox', url: '/folder/Inbox', icon: 'mail' },
     { title: 'Outbox', url: '/folder/Outbox', icon: 'paper-plane' },
   ];
-  constructor() {}
+  constructor() { }
 }
