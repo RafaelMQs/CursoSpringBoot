@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CategoriaDTO } from '../../models/categoria.dto';
 import { CategoriaService } from '../../services/domain/categoria.service';
 
 @Component({
@@ -7,6 +8,8 @@ import { CategoriaService } from '../../services/domain/categoria.service';
   styleUrls: ['./categorias.page.scss'],
 })
 export class CategoriasPage implements OnInit {
+
+  items: CategoriaDTO[];
 
   constructor(
     public categoriaService: CategoriaService
@@ -17,7 +20,7 @@ export class CategoriasPage implements OnInit {
 
   ionViewDidEnter() {
     this.categoriaService.findAll().subscribe(response => {
-      console.log(response)
+      this.items = response;
     },
       error => {
         console.log(error)
