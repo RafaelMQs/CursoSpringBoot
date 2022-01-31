@@ -25,7 +25,7 @@ export class FolderPage {
   login() {
     this.auth.authenticate(this.creds)
       .subscribe(response => {
-        console.log(response.headers.get('Authorization'));
+        this.auth.successfulLogin(response.headers.get('Authorization'));
         this.router.navigate(['categorias']);
       },
         error => {}

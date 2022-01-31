@@ -11,6 +11,10 @@ export class ErrorInterceptor implements HttpInterceptor {
       .pipe(
         catchError(error => {
 
+          if (error.error) {
+            error = error.error
+          }
+
           if (!error.status) {
             error = JSON.parse(error);
           }
