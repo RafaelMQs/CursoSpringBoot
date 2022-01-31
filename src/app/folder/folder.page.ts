@@ -1,14 +1,19 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
+import { CredenciaisDTO } from '../../models/credenciais.dto';
 
 @Component({
   selector: 'app-folder',
   templateUrl: './folder.page.html',
   styleUrls: ['./folder.page.scss'],
 })
-export class FolderPage{
-  public folder: string;
+export class FolderPage {
+
+  creds: CredenciaisDTO = {
+    email: "",
+    senha: ""
+  };
 
   constructor(
     private router: Router,
@@ -17,6 +22,7 @@ export class FolderPage{
 
   login() {
     console.log("Logado!");
+    console.log(this.creds);
     this.router.navigate(['categorias']);
   }
 
