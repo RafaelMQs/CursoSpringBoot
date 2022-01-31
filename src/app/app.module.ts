@@ -9,12 +9,13 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { CategoriaService } from '../services/domain/categoria.service';
 import { ErrorInterceptorProvider } from '../interceptors/error-interceptor';
+import { AuthService } from '../services/auth.service';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, CategoriaService, ErrorInterceptorProvider],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, CategoriaService, ErrorInterceptorProvider, AuthService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

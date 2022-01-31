@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
 import { CredenciaisDTO } from '../../models/credenciais.dto';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-folder',
@@ -17,13 +18,18 @@ export class FolderPage {
 
   constructor(
     private router: Router,
-    public menuController: MenuController
+    public menuController: MenuController,
+    public auth: AuthService
   ) { }
 
   login() {
-    console.log("Logado!");
-    console.log(this.creds);
-    this.router.navigate(['categorias']);
+    this.auth.authenticate(this.creds)
+      .subscribe(response => {
+        console.log(response.headers.get('Authorization'));
+        this.router.navigate(['categorias']);
+      },
+        error => {}
+    )
   }
 
   // Desabilita o menu dentro da tela inicial
