@@ -32,12 +32,8 @@ export class FolderPage {
     )
   }
 
-  // Desabilita o menu dentro da tela inicial
-  ionViewWillEnter() {
-    this.menuController.swipeGesture(false);
-  }
-
   ionViewDidEnter() {
+    this.menuController.swipeGesture(false);
     this.auth.refreshToken()
       .subscribe(response => {
         this.auth.successfulLogin(response.headers.get('Authorization'));
