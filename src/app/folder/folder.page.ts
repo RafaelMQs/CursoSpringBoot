@@ -32,6 +32,10 @@ export class FolderPage {
     )
   }
 
+  signup() {
+    this.router.navigate(['signup'])
+  }
+
   ionViewDidEnter() {
     this.menuController.swipeGesture(false);
     this.auth.refreshToken()
