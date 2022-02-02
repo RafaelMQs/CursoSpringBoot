@@ -37,6 +37,16 @@ export class FolderPage {
     this.menuController.swipeGesture(false);
   }
 
+  ionViewDidEnter() {
+    this.auth.refreshToken()
+      .subscribe(response => {
+        this.auth.successfulLogin(response.headers.get('Authorization'));
+        this.router.navigate(['categorias']);
+      },
+        error => { }
+      )
+  }
+
   // Habilita o menu ao sair da tela inicial
   ionViewWillLeave() {
     this.menuController.swipeGesture(true);
