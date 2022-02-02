@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ClienteDTO } from '../../models/cliente.dto';
 import { ClienteService } from '../../services/domain/cliente.service';
 import { StorageService } from '../../services/storage.service';
@@ -12,7 +13,7 @@ export class ProfilePage implements OnInit {
 
   cliente: ClienteDTO;
 
-  constructor(public storage: StorageService, public clienteService: ClienteService) { }
+  constructor(public storage: StorageService, public clienteService: ClienteService, public router: Router) { }
 
   ngOnInit() {
     let localUser = this.storage.getLocalUser();
@@ -21,8 +22,14 @@ export class ProfilePage implements OnInit {
         .subscribe(response => {
           this.cliente = response;
         },
-          error => { }
+          error => {
+            if (error.status == 403) {
+              this.router.navigate(['']);
+            }
+          }
         )
+    } else {
+      this.router.navigate(['']);
     }
   }
 }
