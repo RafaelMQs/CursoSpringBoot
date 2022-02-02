@@ -6,7 +6,6 @@ import { Observable, throwError } from "rxjs";
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    console.log("Passou pelo interceptor!")
     return next.handle(req)
       .pipe(
         catchError(error => {
