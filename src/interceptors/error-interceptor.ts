@@ -4,6 +4,8 @@ import { catchError } from 'rxjs/operators';
 import { Observable, throwError } from "rxjs";
 import { StorageService } from "../services/storage.service";
 import { AlertController } from "@ionic/angular";
+import { FieldMessage } from "../models/fieldmessage";
+import { error } from "protractor";
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
@@ -15,17 +17,21 @@ export class ErrorInterceptor implements HttpInterceptor {
       .pipe(
         catchError(error => {
 
-          if (error.error) {
-            error = error;
-          }
+          let errorObj = error;
 
+            if (errorObj.error) {
+                errorObj = errorObj.error;
+            }
           console.log("Erro detectado pelo interceptor")
-          console.log(error.error.error)
+          console.log(error)
 
           switch (error.status) {
             case 401:
-              console.log("401")
               this.handle401();
+              break;
+
+            case 422:
+              this.handle422(errorObj);
               break;
 
             case 403:
@@ -33,11 +39,11 @@ export class ErrorInterceptor implements HttpInterceptor {
               break;
 
             default:
-              this.handleDefaultError(error.error);
+              this.handleDefaultError(errorObj);
               break;
           }
 
-          return throwError(error);
+          return throwError(errorObj);
         })) as any;
   }
 
@@ -51,22 +57,40 @@ export class ErrorInterceptor implements HttpInterceptor {
     await alert.present();
   }
 
-  handle403() {
-    this.storage.setLocalUser(null);
-  }
-
-  async handleDefaultError(error) {
+  async handle422(errorObj) {
     const alert = await this.alertController.create({
-      header: 'Erro ' + error.status + ': ' + error.error,
-      message: error.message,
+      header: 'Erro 422: Validação',
+      message: this.listErrors(errorObj.errors),
       buttons: ['OK']
     });
 
     await alert.present();
   }
 
-}
+  handle403() {
+    this.storage.setLocalUser(null);
+  }
 
+  async handleDefaultError(errorObj) {
+    const alert = await this.alertController.create({
+      header: 'Erro ' + errorObj.status + ': ' + errorObj.error,
+      message: errorObj.message,
+      buttons: ['OK']
+    });
+
+    await alert.present();
+  }
+
+
+  private listErrors(messages: FieldMessage[]): string {
+    let s: string = '';
+    for (var i = 0; i < messages.length; i++) {
+      s = s + '<p><strong>' + messages[i].fieldName + "</strong>: " + messages[i].message + '</p>';
+    }
+    return s;
+  }
+
+}
 
 export const ErrorInterceptorProvider = {
   provide: HTTP_INTERCEPTORS,

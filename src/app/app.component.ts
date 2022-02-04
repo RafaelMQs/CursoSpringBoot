@@ -1,6 +1,7 @@
 
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'app-root',
@@ -13,10 +14,10 @@ export class AppComponent {
     { title: 'Categorias', url: 'categorias', icon: 'apps' },
     { title: 'Logout', url: '', icon: 'log-out' },
   ];
-  constructor(public authService: AuthService, public router: Router) { }
+  constructor(public authService: AuthService, public navCtrl: NavController) { }
 
   openPage(p) {
-    this.router.navigate([p.url]);
+    this.navCtrl.navigateRoot(p.url);
     switch (p.title) {
       case 'Logout':
         this.authService.logout();

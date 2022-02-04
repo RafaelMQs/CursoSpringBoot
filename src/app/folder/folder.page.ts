@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MenuController } from '@ionic/angular';
+import { MenuController, NavController } from '@ionic/angular';
 import { CredenciaisDTO } from '../../models/credenciais.dto';
 import { AuthService } from '../../services/auth.service';
 
@@ -9,7 +9,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './folder.page.html',
   styleUrls: ['./folder.page.scss'],
 })
-export class FolderPage {
+export class FolderPage implements OnInit {
 
   creds: CredenciaisDTO = {
     email: "",
@@ -17,31 +17,34 @@ export class FolderPage {
   };
 
   constructor(
-    private router: Router,
+    public navCtrl: NavController,
     public menuController: MenuController,
     public auth: AuthService
   ) { }
+
+  ngOnInit() {
+    this.menuController.swipeGesture(false);
+    }
 
   login() {
     this.auth.authenticate(this.creds)
       .subscribe(response => {
         this.auth.successfulLogin(response.headers.get('Authorization'));
-        this.router.navigate(['categorias']);
+        this.navCtrl.navigateRoot('categorias');
       },
         error => {}
     )
   }
 
   signup() {
-    this.router.navigate(['signup'])
+    this.navCtrl.navigateRoot('signup')
   }
 
   ionViewDidEnter() {
-    this.menuController.swipeGesture(false);
     this.auth.refreshToken()
       .subscribe(response => {
         this.auth.successfulLogin(response.headers.get('Authorization'));
-        this.router.navigate(['categorias']);
+        this.navCtrl.navigateRoot('categorias');
       },
         error => { }
       )
