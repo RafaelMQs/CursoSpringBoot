@@ -11,12 +11,12 @@
   <ion-list>
     <ion-item button *ngFor="let item of items">
       <ion-thumbnail slot="start">
-        <img [src]="item.imageUrl || 'assets/imgs/prod.jpg'" />
+        <img [src]="item.imageUrl || 'assets/imgs/prod.jpg'"/>
       </ion-thumbnail>
-      <ion-item-diviser>
+      <div>
         <ion-label> {{item.nome}} </ion-label>
         <ion-text> {{item.preco | currency}} </ion-text>
-      </ion-item-diviser>
+      </div>
     </ion-item>
   </ion-list>
 </ion-content>
