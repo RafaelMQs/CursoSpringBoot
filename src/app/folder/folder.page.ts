@@ -24,7 +24,7 @@ export class FolderPage implements OnInit {
 
   ngOnInit() {
     this.menuController.swipeGesture(false);
-    }
+  }
 
   login() {
     this.auth.authenticate(this.creds)
@@ -32,8 +32,8 @@ export class FolderPage implements OnInit {
         this.auth.successfulLogin(response.headers.get('Authorization'));
         this.navCtrl.navigateRoot('categorias');
       },
-        error => {}
-    )
+        error => { }
+      )
   }
 
   signup() {
@@ -54,6 +54,6 @@ export class FolderPage implements OnInit {
   ionViewWillLeave() {
     this.menuController.swipeGesture(true);
   }
-  
+
 
 }

@@ -3,17 +3,20 @@
     <ion-buttons slot="start">
       <ion-menu-button> <ion-icon name="menu"></ion-icon> </ion-menu-button>
     </ion-buttons>
-    <ion-title>Categorias</ion-title>
+    <ion-title> Produtos </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-list>
-    <ion-item button *ngFor="let item of items" (click)="showProdutos(item.id)">
+    <ion-item button *ngFor="let item of items">
       <ion-thumbnail slot="start">
-        <img src="assets/imgs/categorias/cat{{item.id}}.jpg">
+        <img [src]="item.imageUrl || 'assets/imgs/prod.jpg'" />
       </ion-thumbnail>
-      <ion-label> {{item.nome}} </ion-label>
+      <ion-item-diviser>
+        <ion-label> {{item.nome}} </ion-label>
+        <ion-text> {{item.preco | currency}} </ion-text>
+      </ion-item-diviser>
     </ion-item>
   </ion-list>
 </ion-content>
