@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationExtras } from '@angular/router';
 import { NavController, NavParams } from '@ionic/angular';
 import { error } from 'protractor';
 import { throwError } from 'rxjs';
@@ -30,7 +30,6 @@ export class ProdutosPage implements OnInit {
     this.produtoService.findByCategoria(this.currency)
       .subscribe(response => {
         this.items = response['content'];
-        console.log(this.items)
         this.loadImageUrls();
       },
         error => { });
@@ -43,8 +42,13 @@ export class ProdutosPage implements OnInit {
     }
   }
 
-  showDetail() {
-    this.navCtrl.navigateRoot('produto-detail')
+  showDetail(produto_id: string) {
+    let navigationExtras: NavigationExtras = {
+      queryParams: {
+        categoria_id: JSON.stringify(produto_id)
+      }
+    }
+    this.navCtrl.navigateRoot('produto-detail', navigationExtras)
   }
 
 }
