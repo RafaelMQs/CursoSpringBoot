@@ -43,4 +43,8 @@ export class ProdutosPage implements OnInit {
     }
   }
 
+  showDetail() {
+    this.navCtrl.navigateRoot('produto-detail')
+  }
+
 }
