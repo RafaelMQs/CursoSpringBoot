@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { NavController } from '@ionic/angular';
 import { ProdutoDTO } from '../../models/produto.dto';
+import { CartService } from '../../services/domain/cart.service';
 import { ProdutoService } from '../../services/domain/produto.service';
 
 @Component({
@@ -13,7 +15,9 @@ export class ProdutoDetailPage implements OnInit {
   item: ProdutoDTO;
   currency;
 
-  constructor(public produtoService: ProdutoService, public route: ActivatedRoute) { }
+  constructor(public produtoService: ProdutoService, public route: ActivatedRoute,
+    public cartService: CartService, public navCtrl: NavController
+  ) { }
 
   ngOnInit() {
   }
@@ -32,6 +36,11 @@ export class ProdutoDetailPage implements OnInit {
 
   loadImageUrls() {
     this.item.imageUrl = `assets/imgs/produtos/prod${this.item.id}.png`;
+  }
+
+  addToCart(produto: ProdutoDTO) {
+    this.cartService.addProduto(produto);
+    this.navCtrl.navigateRoot('cart');
   }
 }
 

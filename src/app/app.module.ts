@@ -15,13 +15,14 @@ import { ClienteService } from '../services/domain/cliente.service';
 import { AuthInterceptorProvider } from '../interceptors/auth-interceptor';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ProdutoService } from '../services/domain/produto.service';
+import { CartService } from '../services/domain/cart.service';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, CategoriaService, AuthInterceptorProvider, ErrorInterceptorProvider,
-    AuthService, StorageService, ClienteService, ProdutoService, NavParams
+    AuthService, StorageService, ClienteService, ProdutoService, NavParams, CartService
   ],
   bootstrap: [AppComponent],
 })
