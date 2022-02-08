@@ -51,4 +51,7 @@ export class ProdutosPage implements OnInit {
     this.navCtrl.navigateRoot('produto-detail', navigationExtras)
   }
 
+  goToCart() {
+    this.navCtrl.navigateRoot('cart')
+  }
 }

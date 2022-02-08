@@ -1,9 +1,9 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button> <ion-icon name="menu"></ion-icon> </ion-menu-button>
+      <ion-back-button defaultHref="" (click)="goOn()"></ion-back-button>
     </ion-buttons>
-    <ion-title>Categorias</ion-title>
+    <ion-title> Cart </ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -31,4 +31,5 @@
     </ion-item>
   </ion-list>
   <ion-button expand="block" (click)="goOn()">Continuar comprando</ion-button>
+  <ion-button color="secondary" expand="block" (click)="checkout()"> Finalizar compra</ion-button>
 </ion-content>
