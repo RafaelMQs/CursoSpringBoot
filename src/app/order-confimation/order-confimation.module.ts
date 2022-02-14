@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { OrderConfimationPageRoutingModule } from './order-confimation-routing.module';
 
 import { OrderConfimationPage } from './order-confimation.page';
+import { PedidoService } from '../../services/domain/pedido.service';
 
 @NgModule({
   imports: [
@@ -15,6 +16,8 @@ import { OrderConfimationPage } from './order-confimation.page';
     IonicModule,
     OrderConfimationPageRoutingModule
   ],
-  declarations: [OrderConfimationPage]
+  declarations: [OrderConfimationPage],
+
+  providers: [ PedidoService ]
 })
 export class OrderConfimationPageModule {}

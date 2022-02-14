@@ -7,6 +7,7 @@ import { EnderecoDTO } from '../../models/endereco.dto';
 import { PedidoDTO } from '../../models/pedido.dto';
 import { CartService } from '../../services/domain/cart.service';
 import { ClienteService } from '../../services/domain/cliente.service';
+import { PedidoService } from '../../services/domain/pedido.service';
 
 @Component({
   selector: 'app-order-confimation',
@@ -21,7 +22,7 @@ export class OrderConfimationPage implements OnInit {
   endereco: EnderecoDTO;
 
   constructor(public route: ActivatedRoute, public cartService: CartService, public clienteService: ClienteService,
-    public navCtrl: NavController
+    public navCtrl: NavController, public pedidoService: PedidoService
   ) { }
 
   ngOnInit() {
@@ -42,8 +43,6 @@ export class OrderConfimationPage implements OnInit {
           this.navCtrl.navigateRoot('');
         }
     );
-
-    console.log(this.pedido.pagamento['@type'])
   }
 
   private findEndereco(id: string, list: EnderecoDTO[]): EnderecoDTO {
@@ -51,7 +50,25 @@ export class OrderConfimationPage implements OnInit {
     return list[position];
   }
 
+  back() {
+    this.navCtrl.navigateRoot('cart')
+  }
+
   total() {
     return this.cartService.total();
+  }
+
+  checkout() {
+    this.pedidoService.insert(this.pedido)
+      .subscribe(response => {
+        this.cartService.createOrClearCart();
+        console.log(response.headers.get('location'))
+      },
+        error => {
+          if (error.status == 403) {
+            this.navCtrl.navigateRoot('')
+          }
+        }
+    )
   }
 }

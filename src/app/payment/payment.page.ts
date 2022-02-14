@@ -20,7 +20,7 @@ export class PaymentPage implements OnInit {
   constructor(public formBuilder: FormBuilder, public route: ActivatedRoute, public navCtrl: NavController) {
     this.formGroup = this.formBuilder.group({
       numeroDeParcelas: [1, Validators.required],
-      "@type": ["pagamentoComBoleto", Validators.required]
+      "@type": ["pagamentoComCartao", Validators.required]
     });
   }
 
