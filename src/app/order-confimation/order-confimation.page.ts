@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NavController } from '@ionic/angular';
+import { AlertController, NavController } from '@ionic/angular';
 import { CartItem } from '../../models/cart-item';
 import { ClienteDTO } from '../../models/cliente.dto';
 import { EnderecoDTO } from '../../models/endereco.dto';
@@ -20,9 +20,10 @@ export class OrderConfimationPage implements OnInit {
   cartItems: CartItem[];
   cliente: ClienteDTO;
   endereco: EnderecoDTO;
+  codPedido: string;
 
   constructor(public route: ActivatedRoute, public cartService: CartService, public clienteService: ClienteService,
-    public navCtrl: NavController, public pedidoService: PedidoService
+    public navCtrl: NavController, public pedidoService: PedidoService, public alertController: AlertController
   ) { }
 
   ngOnInit() {
@@ -42,7 +43,7 @@ export class OrderConfimationPage implements OnInit {
         error => {
           this.navCtrl.navigateRoot('');
         }
-    );
+      );
   }
 
   private findEndereco(id: string, list: EnderecoDTO[]): EnderecoDTO {
@@ -62,13 +63,44 @@ export class OrderConfimationPage implements OnInit {
     this.pedidoService.insert(this.pedido)
       .subscribe(response => {
         this.cartService.createOrClearCart();
-        console.log(response.headers.get('location'))
+        this.codPedido = this.extractId(response.headers.get('location'))
+        if (this.codPedido) {
+          this.presentAlert();
+        }
       },
         error => {
           if (error.status == 403) {
             this.navCtrl.navigateRoot('')
           }
         }
-    )
+      )
+  }
+
+  private extractId(location: string): string {
+    let position = location.lastIndexOf('/');
+    return location.substring(position + 1, location.length);
+  }
+
+
+  async presentAlert() {
+    const alert = await this.alertController.create({
+      header: 'Pedido',
+      subHeader: 'Registrado com sucesso!',
+      message: 'Código do pedido: ' + this.codPedido + '<br> Verifique seu Email',
+      buttons: [
+        {
+          text: 'OK',
+          id: 'confirm-button',
+          handler: () => {
+            this.navCtrl.navigateRoot('categorias')
+          }
+        }
+      ],
+
+    });
+
+    await alert.present();
+
+    await alert.onDidDismiss();
   }
 }
