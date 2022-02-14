@@ -25,6 +25,10 @@ export class ProdutosPage implements OnInit {
   }
 
   ionViewDidEnter() {
+    this.loadData();
+  }
+
+  loadData() {
     this.route.queryParams.subscribe(params => {
       this.currency = JSON.parse(params['categoria_id'])
     })
@@ -75,6 +79,13 @@ export class ProdutosPage implements OnInit {
 
   async dismiss() {
     this.isLoading = false;
+  }
+
+  doRefresh(event) {
+    this.loadData();
+    setTimeout(() => {
+      event.target.complete();
+    }, 1000);
   }
 
 
