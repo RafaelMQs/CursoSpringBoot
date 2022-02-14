@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AlertController, NavController } from '@ionic/angular';
+import { AlertController, LoadingController, NavController } from '@ionic/angular';
 import { CartItem } from '../../models/cart-item';
 import { ClienteDTO } from '../../models/cliente.dto';
 import { EnderecoDTO } from '../../models/endereco.dto';
@@ -22,8 +22,11 @@ export class OrderConfimationPage implements OnInit {
   endereco: EnderecoDTO;
   codPedido: string;
 
+  isLoading = false;
+
   constructor(public route: ActivatedRoute, public cartService: CartService, public clienteService: ClienteService,
-    public navCtrl: NavController, public pedidoService: PedidoService, public alertController: AlertController
+    public navCtrl: NavController, public pedidoService: PedidoService, public alertController: AlertController,
+    public loadingController: LoadingController
   ) { }
 
   ngOnInit() {
@@ -60,15 +63,18 @@ export class OrderConfimationPage implements OnInit {
   }
 
   checkout() {
+    this.presentLoading();
     this.pedidoService.insert(this.pedido)
       .subscribe(response => {
         this.cartService.createOrClearCart();
-        this.codPedido = this.extractId(response.headers.get('location'))
+        this.codPedido = this.extractId(response.headers.get('location'));
+        this.dismiss();
         if (this.codPedido) {
           this.presentAlert();
         }
       },
         error => {
+          this.dismiss();
           if (error.status == 403) {
             this.navCtrl.navigateRoot('')
           }
@@ -103,4 +109,23 @@ export class OrderConfimationPage implements OnInit {
 
     await alert.onDidDismiss();
   }
+
+  async presentLoading() {
+    this.isLoading = true;
+    return await this.loadingController.create({
+      message: 'Aguarde'
+    }).then(a => {
+      a.present().then(() => {
+        if (!this.isLoading) {
+          a.dismiss();
+        }
+      });
+    });
+  }
+
+  async dismiss() {
+    this.isLoading = false;
+    return await this.loadingController.dismiss();
+  }
+
 }

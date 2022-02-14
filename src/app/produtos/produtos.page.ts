@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras } from '@angular/router';
-import { NavController, NavParams } from '@ionic/angular';
+import { LoadingController, NavController, NavParams } from '@ionic/angular';
 import { error } from 'protractor';
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -16,9 +16,10 @@ export class ProdutosPage implements OnInit {
 
   items: ProdutoDTO[];
   currency;
+  isLoading = false;
 
   constructor(public navCtrl: NavController, public route: ActivatedRoute,
-    public produtoService: ProdutoService) { }
+    public produtoService: ProdutoService, public loadingController: LoadingController) { }
 
   ngOnInit() {
   }
@@ -27,12 +28,16 @@ export class ProdutosPage implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.currency = JSON.parse(params['categoria_id'])
     })
+    this.presentLoading();
     this.produtoService.findByCategoria(this.currency)
       .subscribe(response => {
         this.items = response['content'];
         this.loadImageUrls();
+        this.dismiss();
       },
-        error => { });
+        error => {
+          this.dismiss();
+        });
   }
 
   loadImageUrls() {
@@ -54,4 +59,23 @@ export class ProdutosPage implements OnInit {
   goToCart() {
     this.navCtrl.navigateRoot('cart')
   }
+
+  async presentLoading() {
+    this.isLoading = true;
+    return await this.loadingController.create({
+      message: 'Aguarde',
+    }).then(a => {
+      a.present().then(() => {
+        if (!this.isLoading) {
+          a.dismiss();
+        }
+      });
+    });
+  }
+
+  async dismiss() {
+    this.isLoading = false;
+  }
+
+
 }
