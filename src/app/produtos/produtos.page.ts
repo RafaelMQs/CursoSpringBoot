@@ -1,6 +1,7 @@
+import { ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras } from '@angular/router';
-import { LoadingController, NavController, NavParams } from '@ionic/angular';
+import { IonInfiniteScroll, LoadingController, NavController, NavParams } from '@ionic/angular';
 import { error } from 'protractor';
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -13,10 +14,12 @@ import { ProdutoService } from '../../services/domain/produto.service';
   styleUrls: ['./produtos.page.scss'],
 })
 export class ProdutosPage implements OnInit {
+  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
-  items: ProdutoDTO[];
+  items: ProdutoDTO[] = [];
   currency;
   isLoading = false;
+  page: number = 0
 
   constructor(public navCtrl: NavController, public route: ActivatedRoute,
     public produtoService: ProdutoService, public loadingController: LoadingController) { }
@@ -33,10 +36,12 @@ export class ProdutosPage implements OnInit {
       this.currency = JSON.parse(params['categoria_id'])
     })
     this.presentLoading();
-    this.produtoService.findByCategoria(this.currency)
+    this.produtoService.findByCategoria(this.currency, this.page, 10)
       .subscribe(response => {
-        this.items = response['content'];
+        this.items = this.items.concat(response['content']);
         this.loadImageUrls();
+        console.log(this.page)
+        console.log(this.items)
         this.dismiss();
       },
         error => {
@@ -82,11 +87,19 @@ export class ProdutosPage implements OnInit {
   }
 
   doRefresh(event) {
+    this.page = 0;
+    this.items = [];
     this.loadData();
     setTimeout(() => {
       event.target.complete();
     }, 1000);
   }
 
-
+  loadDataScroll(event) {
+    this.page++;
+    this.loadData();
+    setTimeout(() => {
+      event.target.complete();
+    }, 500);
+  }
 }
